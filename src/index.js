@@ -36,10 +36,13 @@ const resolvers = {
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: userQueries.getContext
+    context: userQueries.getContext,
+    engine: {
+        reportSchema: true
+    }
 })
 
-server.listen().then(({url, subscriptionsUrl}) => {
+server.listen({ port: process.env.PORT || 4000 }).then(({url, subscriptionsUrl}) => {
     console.log(`Server ready at ${url}`)
     console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
