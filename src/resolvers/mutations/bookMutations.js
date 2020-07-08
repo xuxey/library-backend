@@ -6,6 +6,8 @@ const pubsub = new PubSub()
 const addBook = async (root, args, context) => {
     if (!context.currentUser)
         throw new AuthenticationError("not authenticated")
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("not authorized")
     let author = await Author.findOne({name: args.author})
     if (!author) {
         const newAuthor = new Author({name: args.author})
@@ -16,7 +18,7 @@ const addBook = async (root, args, context) => {
                 })
             })
     }
-    let book = await new Book({...args, author: author._id, available: true})
+    let book = await new Book({...args, author: author._id, borrower: null})
 
     let savedBook = await book.save()
         .catch(async error => {
@@ -31,6 +33,8 @@ const addBook = async (root, args, context) => {
 }
 
 const deleteBook = async (root, args, context) => {
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("not authorized")
     if (!context.currentUser)
         throw new AuthenticationError("not authenticated")
     return Book.findByIdAndDelete(args.id)

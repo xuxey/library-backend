@@ -7,9 +7,6 @@ const schema = new mongoose.Schema({
         unique: true,
         minlength: 2
     },
-    published: {
-        type: Number,
-    },
     price: {
         type: Number,
         required: true

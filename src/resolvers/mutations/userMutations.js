@@ -13,7 +13,8 @@ const register = async (root, args) => {
         passwordHash,
         apartmentWing: args.apartmentWing,
         apartmentNumber: args.apartmentNumber,
-        phoneNumber: args.phoneNumber
+        phoneNumber: args.phoneNumber,
+        borrowedBooks: []
     })
     console.log(user)
     let newUser = await user.save()

@@ -13,6 +13,7 @@ const getContext = async ({req}) => {
         auth = auth.substring(7)
     const decodedToken = jwt.verify(auth, config.SECRET)
     const currentUser = await User.findById(decodedToken._id)
+        .populate('borrowedBooks')
     return {currentUser}
 }
 

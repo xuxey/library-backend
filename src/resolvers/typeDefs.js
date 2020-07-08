@@ -10,7 +10,7 @@ const typeDefs = gql`
     type Book {
         price: Int!
         title: String!
-        published: Int!
+        borrower: User!
         author: Author!
         _id: ID!
         genres: [String!]!
@@ -29,6 +29,7 @@ const typeDefs = gql`
         apartmentNumber: Int!
         username: String!
         password: String!
+        borrowedBooks: [Book!]!
         id: ID! 
         token: String
     }
@@ -37,7 +38,6 @@ const typeDefs = gql`
             price: Int!
             title: String!
             author: String!
-            published: Int!
             genres: [String!]!
         ): Book
         deleteBook(

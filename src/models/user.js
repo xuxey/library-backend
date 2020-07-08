@@ -22,7 +22,13 @@ const schema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         required: true
-    }
+    },
+    borrowedBooks: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book'
+        }
+    ]
 })
 
 module.exports = mongoose.model('User', schema)
