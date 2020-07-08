@@ -1,5 +1,5 @@
 const Author = require("../../models/author")
-const {AuthenticationError} = require('apollo-server');
+const {AuthenticationError, UserInputError} = require('apollo-server');
 
 const editAuthor = async (root, args, context) => {
     if (!context.currentUser)

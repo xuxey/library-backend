@@ -7,7 +7,7 @@ const allBooks = async (root, args) => {
         .populate('author')
     if (args.genre) return Book.find({genres: {$in: [args.genre]}})
         .populate('author')
-    return Book.find({})
+    return await Book.find({})
         .populate('author').exec()
 }
 module.exports = {bookCount, allBooks}

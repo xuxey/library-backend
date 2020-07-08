@@ -10,6 +10,10 @@ const schema = new mongoose.Schema({
     published: {
         type: Number,
     },
+    price: {
+        type: Number,
+        required: true
+    },
     author: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +21,11 @@ const schema = new mongoose.Schema({
     },
     genres: [
         {type: String}
-    ]
+    ],
+    borrower: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 module.exports = mongoose.model('Book', schema)

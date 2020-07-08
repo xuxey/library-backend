@@ -11,9 +11,18 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    favoriteGenre: {
+    apartmentWing: {
         type: String,
+        required: true
     },
+    apartmentNumber: {
+        type: Number,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('User', schema)

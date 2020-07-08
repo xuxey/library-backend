@@ -17,8 +17,9 @@ mongoose.connect(config.LIBRARY_MONGO_URI, {useNewUrlParser: true, useUnifiedTop
 const resolvers = {
     Mutation: {
         addBook: bookMutations.addBook,
+        deleteBook: bookMutations.deleteBook,
         editAuthor: authorMutations.editAuthor,
-        createUser: userMutations.createUser,
+        register: userMutations.register,
         login: userMutations.login
     },
     Query: {
@@ -42,7 +43,6 @@ const server = new ApolloServer({
     }
 })
 
-server.listen({ port: process.env.PORT || 4000 }).then(({url, subscriptionsUrl}) => {
+server.listen({ port: process.env.PORT || 4000 }).then(({url}) => {
     console.log(`Server ready at ${url}`)
-    console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

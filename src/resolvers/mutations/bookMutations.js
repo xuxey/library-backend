@@ -16,7 +16,7 @@ const addBook = async (root, args, context) => {
                 })
             })
     }
-    let book = await new Book({...args, author: author._id})
+    let book = await new Book({...args, author: author._id, available: true})
 
     let savedBook = await book.save()
         .catch(async error => {
@@ -30,10 +30,22 @@ const addBook = async (root, args, context) => {
     return savedBook
 }
 
+const deleteBook = async (root, args, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("not authenticated")
+    return Book.findByIdAndDelete(args.id)
+}
+
+const setBorrower = (root, args, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("not authenticated")
+
+}
+
 const bookAdded = {
     subscribe: () => {
         return pubsub.asyncIterator(['BOOK_ADDED'])
     }
 }
 
-module.exports = {addBook, bookAdded}
+module.exports = {addBook, bookAdded, deleteBook, setBorrower}

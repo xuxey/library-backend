@@ -8,11 +8,13 @@ const typeDefs = gql`
         bookCount: Int
     }
     type Book {
+        price: Int!
         title: String!
         published: Int!
         author: Author!
         _id: ID!
         genres: [String!]!
+        available: Boolean
     }
     type Query {
         bookCount: Int!
@@ -22,31 +24,39 @@ const typeDefs = gql`
         me: User
     }
     type User {
+        phoneNumber: String!
+        apartmentWing: String!
+        apartmentNumber: Int!
         username: String!
-        favoriteGenre: String!
         password: String!
-        id: ID!
+        id: ID! 
         token: String
     }
     type Mutation {
         addBook(
+            price: Int!
             title: String!
             author: String!
             published: Int!
             genres: [String!]!
         ): Book
+        deleteBook(
+            id: String!
+        ): String
         editAuthor(
             name: String!
             setBornTo: Int!
         ) : Author
-        createUser(
-            username: String!
-            password: String!
-            favoriteGenre: String!
-        ): User
         login(
             username: String!
             password: String!
+        ): User
+        register(
+            username: String!
+            password: String!
+            apartmentWing: String!
+            apartmentNumber: Int!
+            phoneNumber: String!
         ): User
     }
     type Subscription {

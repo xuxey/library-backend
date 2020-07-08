@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const config = require('../../utils/config')
 
 const me = (root, args, context) => {
-    console.log('ME', context.currentUser)
     return context.currentUser
 }
 

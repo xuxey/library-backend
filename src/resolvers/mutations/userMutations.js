@@ -4,21 +4,24 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const config = require('../../utils/config')
 
-const createUser = async (root, args) => {
+const register = async (root, args) => {
     if (args.password.length < 5)
         throw new UserInputError('Password is too short, minimum length: 5 characters', {invalidArgs: args})
     const passwordHash = await bcrypt.hash(args.password, 10)
     const user = new User({
         username: args.username,
-        favoriteGenre: args.favoriteGenre,
-        passwordHash
+        passwordHash,
+        apartmentWing: args.apartmentWing,
+        apartmentNumber: args.apartmentNumber,
+        phoneNumber: args.phoneNumber
     })
+    console.log(user)
     let newUser = await user.save()
+    console.log(newUser)
     const userForToken = {
         username: newUser.username,
         _id: newUser._id,
     }
-
     newUser.token = jwt.sign(userForToken, config.SECRET)
     return newUser
 }
@@ -40,9 +43,8 @@ const login = async (root, {username, password}) => {
     return {
         token,
         username: user.username,
-        id: user._id,
-        favoriteGenre: user.favoriteGenre
+        id: user._id
     }
 }
 
-module.exports = {createUser, login}
+module.exports = {register, login}
