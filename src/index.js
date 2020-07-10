@@ -1,10 +1,8 @@
 const {ApolloServer} = require('apollo-server')
 const typeDefs = require('./resolvers/typeDefs')
 const bookMutations = require("./resolvers/mutations/bookMutations")
-const authorMutations = require("./resolvers/mutations/authorMutations")
 const userMutations = require("./resolvers/mutations/userMutations")
 const bookQueries = require("./resolvers/queries/bookQueries")
-const authorQueries = require("./resolvers/queries/authorQueries")
 const userQueries = require("./resolvers/queries/userQueries")
 const mongoose = require('mongoose')
 const config = require('./utils/config')
@@ -18,16 +16,14 @@ const resolvers = {
     Mutation: {
         addBook: bookMutations.addBook,
         deleteBook: bookMutations.deleteBook,
-        editAuthor: authorMutations.editAuthor,
         register: userMutations.register,
-        login: userMutations.login
+        login: userMutations.login,
+        changePassword: userMutations.changePassword
     },
     Query: {
         bookCount: bookQueries.bookCount,
         allBooks: bookQueries.allBooks,
         bookById: bookQueries.bookById,
-        authorCount: authorQueries.authorCount,
-        allAuthors: authorQueries.allAuthors,
         me: userQueries.me
     },
     Subscription: {

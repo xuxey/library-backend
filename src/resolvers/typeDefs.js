@@ -1,26 +1,18 @@
 const {gql} = require('apollo-server')
 
-const typeDefs = gql`
-    type Author {
-        name: String!
-        _id: ID!
-        born: Int
-        bookCount: Int
-    }
+const typeDefs = gql`    
     type Book {
         price: Int!
         title: String!
         borrower: User
-        author: Author!
+        author: String!
         _id: ID!
         genres: [String!]!
     }
     type Query {
         bookCount: Int!
-        authorCount: Int!
         bookById(id: String): Book
         allBooks(author: String, genre: String): [Book!]!
-        allAuthors: [Author!]!
         me: User
     }
     type User {
@@ -43,10 +35,6 @@ const typeDefs = gql`
         deleteBook(
             id: String!
         ): String
-        editAuthor(
-            name: String!
-            setBornTo: Int!
-        ) : Author
         login(
             username: String!
             password: String!
@@ -58,6 +46,14 @@ const typeDefs = gql`
             apartmentNumber: Int!
             phoneNumber: String!
         ): User
+        changePassword(
+            username: String!
+            currentPassword: String!
+            newPassword: String!
+        ): String
+        reserveBook(
+            id: String!
+        ): Book
     }
     type Subscription {
         bookAdded: Book!

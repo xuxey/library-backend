@@ -1,5 +1,5 @@
 const Book = require("../../models/book")
-const Author = require("../../models/author")
+const User = require("../../models/user")
 const {UserInputError, AuthenticationError, PubSub} = require('apollo-server');
 const pubsub = new PubSub()
 
@@ -8,26 +8,13 @@ const addBook = async (root, args, context) => {
         throw new AuthenticationError("not authenticated")
     if(context.currentUser.username!=='admin')
         throw new AuthenticationError("not authorized")
-    let author = await Author.findOne({name: args.author})
-    if (!author) {
-        const newAuthor = new Author({name: args.author})
-        author = await newAuthor.save()
-            .catch(error => {
-                throw new UserInputError(error.message, {
-                    invalidArgs: args,
-                })
-            })
-    }
-    let book = await new Book({...args, author: author._id, borrower: null})
-
+    let book = await new Book({...args, borrower: null})
     let savedBook = await book.save()
         .catch(async error => {
                 console.log("ERROR", error)
-                await Author.findByIdAndDelete(author._id)
                 throw new UserInputError(error.message, {invalidArgs: args})
             }
         )
-    savedBook.author = author
     await pubsub.publish('BOOK_ADDED', {bookAdded: savedBook})
     return savedBook
 }
@@ -41,10 +28,15 @@ const deleteBook = async (root, args, context) => {
     return args.id
 }
 
-const setBorrower = (root, args, context) => {
+const reserveBook = async (root, args, context) => {
     if (!context.currentUser)
         throw new AuthenticationError("not authenticated")
-
+    const book = await Book.findById(args.id)
+    book.borrower = context.currentUser._id
+    const user = await User.find(context.currentUser._id)
+    user.borrowedBooks = user.borrowedBooks.concat(book._id)
+    await user.save()
+    return book.save()
 }
 
 const bookAdded = {
@@ -53,4 +45,4 @@ const bookAdded = {
     }
 }
 
-module.exports = {addBook, bookAdded, deleteBook, setBorrower}
+module.exports = {addBook, bookAdded, deleteBook, reserveBook}

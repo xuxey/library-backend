@@ -1,5 +1,5 @@
 const User = require("../../models/user")
-const {UserInputError} = require('apollo-server');
+const {UserInputError,AuthenticationError} = require('apollo-server');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const config = require('../../utils/config')
@@ -48,4 +48,24 @@ const login = async (root, {username, password}) => {
     }
 }
 
-module.exports = {register, login}
+const changePassword = async (root, {username, oldPassword, newPassword}, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("not authenticated")
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("not authorized")
+    const user = User.findOne({username})
+    const passwordCorrect = await bcrypt.compare(oldPassword, user.passwordHash)
+    if (!passwordCorrect)
+        throw ('password is incorrect')
+    if (newPassword.length < 5)
+        throw new UserInputError('Password is too short, minimum length: 5 characters', {invalidArgs: newPassword})
+    const passwordHash = await bcrypt.hash(newPassword, 10)
+    const newUser = {
+        ...user,
+        passwordHash
+    }
+    await User.findByIdAndUpdate(user._id, newUser)
+    return "success"
+}
+
+module.exports = {register, login, changePassword}

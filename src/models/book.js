@@ -13,8 +13,8 @@ const schema = new mongoose.Schema({
     },
     author: {
         required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Author'
+        type: String,
+        minlength: 4
     },
     genres: [
         {type: String}
