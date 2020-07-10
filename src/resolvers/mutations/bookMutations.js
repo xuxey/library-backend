@@ -37,7 +37,8 @@ const deleteBook = async (root, args, context) => {
         throw new AuthenticationError("not authorized")
     if (!context.currentUser)
         throw new AuthenticationError("not authenticated")
-    return Book.findByIdAndDelete(args.id)
+    await Book.findByIdAndDelete(args.id)
+    return args.id
 }
 
 const setBorrower = (root, args, context) => {

@@ -21,7 +21,8 @@ const schema = new mongoose.Schema({
     ],
     borrower: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
     }
 })
 

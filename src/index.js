@@ -25,6 +25,7 @@ const resolvers = {
     Query: {
         bookCount: bookQueries.bookCount,
         allBooks: bookQueries.allBooks,
+        bookById: bookQueries.bookById,
         authorCount: authorQueries.authorCount,
         allAuthors: authorQueries.allAuthors,
         me: userQueries.me

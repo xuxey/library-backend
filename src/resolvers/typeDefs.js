@@ -10,15 +10,15 @@ const typeDefs = gql`
     type Book {
         price: Int!
         title: String!
-        borrower: User!
+        borrower: User
         author: Author!
         _id: ID!
         genres: [String!]!
-        available: Boolean
     }
     type Query {
         bookCount: Int!
         authorCount: Int!
+        bookById(id: String): Book
         allBooks(author: String, genre: String): [Book!]!
         allAuthors: [Author!]!
         me: User
