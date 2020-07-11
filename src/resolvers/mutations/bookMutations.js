@@ -33,10 +33,29 @@ const reserveBook = async (root, args, context) => {
         throw new AuthenticationError("not authenticated")
     const book = await Book.findById(args.id)
     book.borrower = context.currentUser._id
-    const user = await User.find(context.currentUser._id)
-    user.borrowedBooks = user.borrowedBooks.concat(book._id)
+    const user = context.currentUser
+    user.borrowedBooks= user.borrowedBooks.concat(book._id)
     await user.save()
-    return book.save()
+    await book.save()
+    return Book.findById(args.id)
+        .populate('borrower')
+}
+
+const setAvailable = async (root, {id}, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("not authenticated")
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("not authorized")
+    const book = await Book.findById(id)
+        .populate('borrower')
+    const user = await User.findById(book.borrower._id)
+    book.borrower=null
+    user.borrowedBooks = user.borrowedBooks
+        .filter(id => id === book._id)
+    await user.save()
+    await book.save()
+    return Book.findById(id)
+        .populate('borrower')
 }
 
 const bookAdded = {
@@ -45,4 +64,4 @@ const bookAdded = {
     }
 }
 
-module.exports = {addBook, bookAdded, deleteBook, reserveBook}
+module.exports = {addBook, bookAdded, deleteBook, reserveBook, setAvailable}

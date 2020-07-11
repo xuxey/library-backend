@@ -13,7 +13,7 @@ const typeDefs = gql`
         bookCount: Int!
         bookById(id: String): Book
         allBooks(author: String, genre: String): [Book!]!
-        me: User
+        me: User!
     }
     type User {
         phoneNumber: String!
@@ -22,6 +22,7 @@ const typeDefs = gql`
         username: String!
         password: String!
         borrowedBooks: [Book!]!
+        wishlist: [Book!]!
         id: ID! 
         token: String
     }
@@ -52,6 +53,9 @@ const typeDefs = gql`
             newPassword: String!
         ): String
         reserveBook(
+            id: String!
+        ): Book
+        setAvailable(
             id: String!
         ): Book
     }

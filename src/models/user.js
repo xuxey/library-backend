@@ -23,6 +23,12 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    wishlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book'
+        }
+    ],
     borrowedBooks: [
         {
             type: mongoose.Schema.Types.ObjectId,

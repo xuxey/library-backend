@@ -18,7 +18,9 @@ const resolvers = {
         deleteBook: bookMutations.deleteBook,
         register: userMutations.register,
         login: userMutations.login,
-        changePassword: userMutations.changePassword
+        changePassword: userMutations.changePassword,
+        reserveBook: bookMutations.reserveBook,
+        setAvailable: bookMutations.setAvailable
     },
     Query: {
         bookCount: bookQueries.bookCount,
