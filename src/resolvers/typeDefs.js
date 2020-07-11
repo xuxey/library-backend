@@ -58,6 +58,9 @@ const typeDefs = gql`
         setAvailable(
             id: String!
         ): Book
+        toggleBookWishlist(
+            id: String!
+        ): String
     }
     type Subscription {
         bookAdded: Book!

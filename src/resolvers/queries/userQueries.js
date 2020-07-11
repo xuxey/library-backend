@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken')
 const config = require('../../utils/config')
 
 const me = (root, args, context) => {
-    return context.currentUser
+    return User.findById(context.currentUser._id)
+        .populate('borrowedBooks')
+        .populate('wishlist').exec()
 }
 
 const getContext = async ({req}) => {
@@ -13,7 +15,6 @@ const getContext = async ({req}) => {
         auth = auth.substring(7)
     const decodedToken = jwt.verify(auth, config.SECRET)
     const currentUser = await User.findById(decodedToken._id)
-        .populate('borrowedBooks')
     return {currentUser}
 }
 

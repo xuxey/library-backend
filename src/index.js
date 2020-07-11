@@ -20,7 +20,8 @@ const resolvers = {
         login: userMutations.login,
         changePassword: userMutations.changePassword,
         reserveBook: bookMutations.reserveBook,
-        setAvailable: bookMutations.setAvailable
+        setAvailable: bookMutations.setAvailable,
+        toggleBookWishlist: bookMutations.toggleWishlist
     },
     Query: {
         bookCount: bookQueries.bookCount,

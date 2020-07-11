@@ -34,11 +34,14 @@ const reserveBook = async (root, args, context) => {
     const book = await Book.findById(args.id)
     book.borrower = context.currentUser._id
     const user = context.currentUser
-    user.borrowedBooks= user.borrowedBooks.concat(book._id)
+    console.log(book._id)
+    console.log("B4", user.borrowedBooks)
+    user.borrowedBooks = user.borrowedBooks.concat(book._id)
+    console.log("AFTER", user.borrowedBooks)
     await user.save()
     await book.save()
     return Book.findById(args.id)
-        .populate('borrower')
+        .populate('borrower').exec()
 }
 
 const setAvailable = async (root, {id}, context) => {
@@ -47,15 +50,32 @@ const setAvailable = async (root, {id}, context) => {
     if(context.currentUser.username!=='admin')
         throw new AuthenticationError("not authorized")
     const book = await Book.findById(id)
-        .populate('borrower')
     const user = await User.findById(book.borrower._id)
     book.borrower=null
-    user.borrowedBooks = user.borrowedBooks
-        .filter(id => id === book._id)
+    user.borrowedBooks = user.borrowedBooks.filter(id => id === book._id)
     await user.save()
     await book.save()
     return Book.findById(id)
         .populate('borrower')
+}
+const toggleWishlist = async (root, args, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("not authenticated")
+    const book = await Book.findById(args.id)
+    const user = context.currentUser
+    console.log(user.wishlist)
+    let returnVal
+    if(user.wishlist.includes(book._id)) {
+        user.wishlist = user.wishlist.filter(id => id === book._id)
+        returnVal = 'Removed'
+    }
+    else {
+        user.wishlist.push(book._id)
+        returnVal = 'Added'
+    }
+    console.log(user.wishlist)
+    await user.save()
+    return returnVal
 }
 
 const bookAdded = {
@@ -64,4 +84,4 @@ const bookAdded = {
     }
 }
 
-module.exports = {addBook, bookAdded, deleteBook, reserveBook, setAvailable}
+module.exports = {addBook, bookAdded, deleteBook, reserveBook, setAvailable, toggleWishlist}
