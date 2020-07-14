@@ -1,5 +1,6 @@
 const Book = require("../../models/book")
 const User = require("../../models/user")
+const Log = require("../../models/log")
 const {UserInputError, AuthenticationError, PubSub} = require('apollo-server');
 const pubsub = new PubSub()
 
@@ -15,6 +16,13 @@ const addBook = async (root, args, context) => {
                 throw new UserInputError(error.message, {invalidArgs: args})
             }
         )
+    const log = new Log({
+        book: book._id,
+        user: context.currentUser._id,
+        type: "NEW_BOOK",
+        time: String(Date.now())
+    })
+    await log.save()
     await pubsub.publish('BOOK_ADDED', {bookAdded: savedBook})
     return savedBook
 }
@@ -34,12 +42,16 @@ const reserveBook = async (root, args, context) => {
     const book = await Book.findById(args.id)
     book.borrower = context.currentUser._id
     const user = context.currentUser
-    console.log(book._id)
-    console.log("B4", user.borrowedBooks)
     user.borrowedBooks = user.borrowedBooks.concat(book._id)
-    console.log("AFTER", user.borrowedBooks)
+    const log = new Log({
+        book: book._id,
+        user: user._id,
+        type: "BOOK_RESERVE",
+        time: String(Date.now())
+    })
     await user.save()
     await book.save()
+    await log.save()
     return Book.findById(args.id)
         .populate('borrower').exec()
 }
@@ -53,8 +65,15 @@ const setAvailable = async (root, {id}, context) => {
     const user = await User.findById(book.borrower._id)
     book.borrower=null
     user.borrowedBooks = user.borrowedBooks.filter(id => id === book._id)
+    const log = new Log({
+        book: book._id,
+        user: user._id,
+        type: "SET_AVAILABLE",
+        time: String(Date.now())
+    })
     await user.save()
     await book.save()
+    await log.save()
     return Book.findById(id)
         .populate('borrower')
 }
@@ -63,7 +82,6 @@ const toggleWishlist = async (root, args, context) => {
         throw new AuthenticationError("not authenticated")
     const book = await Book.findById(args.id)
     const user = context.currentUser
-    console.log(user.wishlist)
     let returnVal
     if(user.wishlist.includes(book._id)) {
         user.wishlist = user.wishlist.filter(id => id === book._id)
@@ -73,7 +91,6 @@ const toggleWishlist = async (root, args, context) => {
         user.wishlist.push(book._id)
         returnVal = 'Added'
     }
-    console.log(user.wishlist)
     await user.save()
     return returnVal
 }

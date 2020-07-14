@@ -1,4 +1,5 @@
 const User = require("../../models/user")
+const Log = require("../../models/log")
 const {UserInputError,AuthenticationError} = require('apollo-server');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -23,6 +24,13 @@ const register = async (root, args) => {
         username: newUser.username,
         _id: newUser._id,
     }
+    const log = new Log({
+        book: null,
+        user: user._id,
+        type: "USER_REGISTERED",
+        time: String(Date.now())
+    })
+    await log.save()
     newUser.token = jwt.sign(userForToken, config.SECRET)
     return newUser
 }

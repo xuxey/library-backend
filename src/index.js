@@ -3,6 +3,7 @@ const typeDefs = require('./resolvers/typeDefs')
 const bookMutations = require("./resolvers/mutations/bookMutations")
 const userMutations = require("./resolvers/mutations/userMutations")
 const bookQueries = require("./resolvers/queries/bookQueries")
+const logQueries = require("./resolvers/queries/logQueries")
 const userQueries = require("./resolvers/queries/userQueries")
 const mongoose = require('mongoose')
 const config = require('./utils/config')
@@ -26,6 +27,7 @@ const resolvers = {
     Query: {
         bookCount: bookQueries.bookCount,
         allBooks: bookQueries.allBooks,
+        allLogs: logQueries.allLogs,
         bookById: bookQueries.bookById,
         me: userQueries.me
     },

@@ -9,10 +9,18 @@ const typeDefs = gql`
         _id: ID!
         genres: [String!]!
     }
+    type Log {
+        book: Book
+        user: User
+        time: String!
+        type: String!
+        _id: ID!
+    }
     type Query {
         bookCount: Int!
         bookById(id: String): Book
         allBooks(author: String, genre: String): [Book!]!
+        allLogs(userId: String): [Log!]!
         me: User!
     }
     type User {
