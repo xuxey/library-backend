@@ -28,6 +28,7 @@ const resolvers = {
         bookCount: bookQueries.bookCount,
         allBooks: bookQueries.allBooks,
         allLogs: logQueries.allLogs,
+        allUsers: userQueries.allUsers,
         bookById: bookQueries.bookById,
         me: userQueries.me
     },

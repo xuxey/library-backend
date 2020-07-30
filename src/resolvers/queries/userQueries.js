@@ -1,3 +1,5 @@
+const {AuthenticationError} = require('apollo-server');
+
 const User = require("../../models/user")
 const jwt = require('jsonwebtoken')
 const config = require('../../utils/config')
@@ -18,4 +20,14 @@ const getContext = async ({req}) => {
     return {currentUser}
 }
 
-module.exports = {me, getContext}
+const allUsers = async (root, args, context) => {
+    if (!context.currentUser)
+        throw new AuthenticationError("You must be logged in")
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("You are not authorized")
+    return User.find({})
+        .populate('borrowedBooks')
+        .populate('wishlist').exec()
+}
+
+module.exports = {me, getContext, allUsers}

@@ -6,9 +6,9 @@ const pubsub = new PubSub()
 
 const addBook = async (root, args, context) => {
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
     if(context.currentUser.username!=='admin')
-        throw new AuthenticationError("not authorized")
+        throw new AuthenticationError("You are not authorized")
     let book = await new Book({...args, borrower: null})
     let savedBook = await book.save()
         .catch(async error => {
@@ -28,17 +28,17 @@ const addBook = async (root, args, context) => {
 }
 
 const deleteBook = async (root, args, context) => {
-    if(context.currentUser.username!=='admin')
-        throw new AuthenticationError("not authorized")
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
+    if(context.currentUser.username!=='admin')
+        throw new AuthenticationError("You are not authorized")
     await Book.findByIdAndDelete(args.id)
     return args.id
 }
 
 const reserveBook = async (root, args, context) => {
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
     const book = await Book.findById(args.id)
     book.borrower = context.currentUser._id
     const user = context.currentUser
@@ -58,9 +58,9 @@ const reserveBook = async (root, args, context) => {
 
 const setAvailable = async (root, {id}, context) => {
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
     if(context.currentUser.username!=='admin')
-        throw new AuthenticationError("not authorized")
+        throw new AuthenticationError("You are not authorized")
     const book = await Book.findById(id)
     const user = await User.findById(book.borrower._id)
     book.borrower=null
@@ -79,7 +79,7 @@ const setAvailable = async (root, {id}, context) => {
 }
 const toggleWishlist = async (root, args, context) => {
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
     const book = await Book.findById(args.id)
     const user = context.currentUser
     let returnVal

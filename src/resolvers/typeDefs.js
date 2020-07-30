@@ -21,6 +21,7 @@ const typeDefs = gql`
         bookById(id: String): Book
         allBooks(author: String, genre: String): [Book!]!
         allLogs(userId: String): [Log!]!
+        allUsers: [User!]!
         me: User!
     }
     type User {

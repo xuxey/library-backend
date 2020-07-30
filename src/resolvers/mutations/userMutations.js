@@ -58,9 +58,9 @@ const login = async (root, {username, password}) => {
 
 const changePassword = async (root, {username, oldPassword, newPassword}, context) => {
     if (!context.currentUser)
-        throw new AuthenticationError("not authenticated")
+        throw new AuthenticationError("You must be logged in")
     if(context.currentUser.username!=='admin')
-        throw new AuthenticationError("not authorized")
+        throw new AuthenticationError("You are not authorized")
     const user = User.findOne({username})
     const passwordCorrect = await bcrypt.compare(oldPassword, user.passwordHash)
     if (!passwordCorrect)
