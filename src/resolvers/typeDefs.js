@@ -23,6 +23,7 @@ const typeDefs = gql`
         allLogs(userId: String): [Log!]!
         allUsers: [User!]!
         me: User!
+        nameExists(name: String!): String!
     }
     type User {
         phoneNumber: String!
@@ -69,6 +70,13 @@ const typeDefs = gql`
         ): Book
         toggleBookWishlist(
             id: String!
+        ): String
+        sendSMS(
+            phone: String!
+        ): String
+        verifySMS(
+            phone: String!
+            code: Int!
         ): String
     }
     type Subscription {

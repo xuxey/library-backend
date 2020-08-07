@@ -4,6 +4,7 @@ const {UserInputError,AuthenticationError} = require('apollo-server');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const config = require('../../utils/config')
+const twilio = require('twilio');
 
 const register = async (root, args) => {
     if (args.password.length < 5)
@@ -76,4 +77,28 @@ const changePassword = async (root, {username, oldPassword, newPassword}, contex
     return "success"
 }
 
-module.exports = {register, login, changePassword}
+const sendSMS = async (root, {phone}, context) => {
+    const accountSid = process.env.ACCOUNT_SID; // Your Account SID from www.twilio.com/console
+    const authToken = process.env.AUTH_TOKEN;   // Your Auth Token from www.twilio.com/console
+    const client = new twilio(accountSid, authToken);
+
+    const result = await client.verify.services(process.env.SERVICE_SID)
+        .verifications
+        .create({to: phone, channel: 'sms'})
+    console.log("RESULT", result)
+    return result.sid
+}
+
+const verifySMS = async (root, {phone, code}, context) => {
+    const accountSid = process.env.ACCOUNT_SID; // Your Account SID from www.twilio.com/console
+    const authToken = process.env.AUTH_TOKEN;   // Your Auth Token from www.twilio.com/console
+    const client = new twilio(accountSid, authToken);
+
+    const result = await client.verify.services(process.env.SERVICE_SID)
+        .verificationChecks
+        .create({to: phone, code})
+    console.log("RESULT", result)
+    return result.status
+}
+
+module.exports = {register, login, changePassword, sendSMS, verifySMS}

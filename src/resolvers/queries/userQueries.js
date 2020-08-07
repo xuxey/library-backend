@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../../utils/config')
 
 const me = (root, args, context) => {
+    console.log("context ", context)
     return User.findById(context.currentUser._id)
         .populate('borrowedBooks')
         .populate('wishlist').exec()
@@ -30,4 +31,12 @@ const allUsers = async (root, args, context) => {
         .populate('wishlist').exec()
 }
 
-module.exports = {me, getContext, allUsers}
+const nameExists = async (root, {name}, context) => {
+    const users = await User.find({username: name})
+    if(users.length>0)
+        return "exists"
+    else
+        return "available"
+}
+
+module.exports = {me, getContext, allUsers, nameExists}

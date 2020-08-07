@@ -22,7 +22,9 @@ const resolvers = {
         changePassword: userMutations.changePassword,
         reserveBook: bookMutations.reserveBook,
         setAvailable: bookMutations.setAvailable,
-        toggleBookWishlist: bookMutations.toggleWishlist
+        toggleBookWishlist: bookMutations.toggleWishlist,
+        sendSMS: userMutations.sendSMS,
+        verifySMS: userMutations.verifySMS
     },
     Query: {
         bookCount: bookQueries.bookCount,
@@ -30,7 +32,8 @@ const resolvers = {
         allLogs: logQueries.allLogs,
         allUsers: userQueries.allUsers,
         bookById: bookQueries.bookById,
-        me: userQueries.me
+        me: userQueries.me,
+        nameExists: userQueries.nameExists
     },
     Subscription: {
         bookAdded: bookMutations.bookAdded
