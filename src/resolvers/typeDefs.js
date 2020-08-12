@@ -24,6 +24,7 @@ const typeDefs = gql`
         allUsers: [User!]!
         me: User!
         nameExists(name: String!): String!
+        phoneLimitReached(phone: String!): String!
     }
     type User {
         phoneNumber: String!

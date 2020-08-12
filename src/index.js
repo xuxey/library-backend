@@ -33,7 +33,8 @@ const resolvers = {
         allUsers: userQueries.allUsers,
         bookById: bookQueries.bookById,
         me: userQueries.me,
-        nameExists: userQueries.nameExists
+        nameExists: userQueries.nameExists,
+        phoneLimitReached: userQueries.phoneLimitReached,
     },
     Subscription: {
         bookAdded: bookMutations.bookAdded

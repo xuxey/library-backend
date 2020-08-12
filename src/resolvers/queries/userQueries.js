@@ -31,12 +31,19 @@ const allUsers = async (root, args, context) => {
         .populate('wishlist').exec()
 }
 
-const nameExists = async (root, {name}, context) => {
+const nameExists = async (root, {name}) => {
     const users = await User.find({username: name})
     if(users.length>0)
         return "exists"
     else
         return "available"
 }
+const phoneLimitReached = async (root, {phone}) => {
+    const users = await User.find({phoneNumber: phone})
+    if(users.length>1)
+        return "exists"
+    else
+        return "available"
+}
 
-module.exports = {me, getContext, allUsers, nameExists}
+module.exports = {me, getContext, allUsers, nameExists, phoneLimitReached}
